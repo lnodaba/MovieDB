@@ -1,0 +1,43 @@
+﻿@page "/search"
+@inject TheMovieDBApiClient _apiClient
+
+<h1>Search movies</h1>
+<input @bind="_searhKey" />
+
+<button class="btn btn-primary" @onclick="DoSearch">Search</button>
+<h1>Result</h1>
+
+@if (_searchResult?.Count > 0)
+{
+    <div class="container-fluid">
+        <div class="row">
+            @foreach (var movie in _searchResult)
+            {
+                <div class="col-3">
+                    <a href="">
+                        <img style="width:300px;height:450px; margin-bottom: 10px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@movie?.PosterUrl.Replace("/", "")" />
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>No Data please use a searchkey longer then 3 chars</p>
+}
+
+
+@code {
+
+    private string _searhKey = string.Empty;
+    private List<Movie> _searchResult = new List<Movie>();
+
+    private void DoSearch()
+    {
+        if (_searhKey.Length > 3)
+        {
+            _searchResult = _apiClient.Search(_searhKey);
+        }
+    }
+}
