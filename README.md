@@ -9,3 +9,5 @@
 - Creating better looking UI for search result
 - Going to detail page
 - Fetching movie/tv show details
+
+Refference repo: https://github.com/lnodaba/dotnetcore-course/tree/movies-api
