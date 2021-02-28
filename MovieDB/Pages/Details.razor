@@ -1,0 +1,67 @@
+﻿@page "/details/{movieId:int}"
+@inject TheMovieDBApiClient _apiClient
+
+@if (MovieDetails == null)
+{
+    <h1>Loading Movie details for @movieId ...</h1>
+}
+else
+{
+    <div class="container-fluid">
+        <div id="movie-details" class="row">
+            <div class="col-6">
+                    <img style="width:300px;height:450px; margin-bottom: 10px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@MovieDetails?.poster_path.Replace("/", "")" />
+            </div>
+            <div class="col-6">
+                <h1>Overview</h1>
+                <p>
+                    @MovieDetails.overview
+                </p>
+                <h1>Credits to go here</h1>
+                <ul>
+                    <li>One</li>
+                    <li>Two</li>
+                    <li>Three</li>
+                    <li>Four</li>
+                </ul>
+            </div>
+        </div>
+        <div id="videos" class="row">
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <h4>Trailers</h4>
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                            @foreach (var video in Videos.results)
+                            {
+                                    <iframe width="800" height="610"
+                                            src="https://www.youtube.com/embed/@video.key">
+                                    </iframe>
+                            }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public int movieId { get; set; }
+
+    ApiMovieDetails MovieDetails { get; set; }
+    ApiVideosResult Videos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        MovieDetails = _apiClient.GetMovieDetails(movieId);
+        Videos = _apiClient.GetVideos(movieId);
+    }
+}

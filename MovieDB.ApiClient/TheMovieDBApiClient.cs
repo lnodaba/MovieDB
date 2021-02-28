@@ -1,4 +1,5 @@
 ﻿using MovieDB.ApiClient.Models;
+using MovieDB.ApiClient.Models.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,16 @@ namespace MovieDB.ApiClient
 
             return searchResultToMovies(jsonString);
         }
+
+        public ApiMovieDetails GetMovieDetails(int apiID)
+        {
+            string queryUrl = getVideoDetails(apiID);
+
+            string jsonString = runGetRequest(queryUrl);
+
+            return JsonSerializer.Deserialize<ApiMovieDetails>(jsonString);
+        }
+
         public ApiVideosResult GetVideos(int apiID)
         {
             string queryUrl = getVideoQuery(apiID);
@@ -74,6 +85,7 @@ namespace MovieDB.ApiClient
 
                 result.Add(new Movie()
                 {
+                    ID = movieItem.id,
                     Title = movieItem.title,
                     Description = movieItem.overview,
                     PosterUrl = movieItem.poster_path,
@@ -91,6 +103,7 @@ namespace MovieDB.ApiClient
                 .ToList()
                 .Select(x => new Movie()
                 {
+                    ID = x.id,
                     Title = x.title,
                     Description = x.overview,
                     PosterUrl = x.poster_path,
@@ -117,6 +130,10 @@ namespace MovieDB.ApiClient
 
         private string getVideoQuery(int apiID) => _apiEndpoint + $"/movie/{apiID}/videos" +
                 $"?api_key={_apiKey}";
+
+        private string getVideoDetails(int apiID) => _apiEndpoint + $"/movie/{apiID}" +
+             $"?api_key={_apiKey}";
+
         private string getCreditQuery(int apiID) => _apiEndpoint + $"/movie/{apiID}/credits" +
                 $"?api_key={_apiKey}";
     }
